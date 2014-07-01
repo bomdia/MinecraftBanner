@@ -27,7 +27,7 @@ class Tool{
             return array('shaw' => sha1($shaw),'salt' => $salt,'type'=>'normalsha');
         }
     }
-    public function Exploder($str,$divider){
+    public function Exploder($str,$divider="&"){
         $a = explode($divider, $str);$na=count($a);
         for ($i=0; ;$i++) {
             if($i==$na){break;}
@@ -36,7 +36,7 @@ class Tool{
         }
         return $cd;
     }
-    public function Imploder($array,$divider){
+    public function Imploder($array,$divider="&"){
         if(!is_array($array)){break;}
         $hu=implode($divider,array_keys($array));
         $v1=explode($divider,$hu);
