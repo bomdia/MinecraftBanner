@@ -7,12 +7,12 @@
      */
 class Setting{
     
-    private $u;//user
-    private $p;//password
-    private $h;//host
-    private $d;//database
+    public $u;//user
+    public $p;//password
+    public $h;//host
+    public $d;//database
     
-    public function __construct($u="root";$p="12345";$h="localhost";$d="Banner";) {
+    public function __construct($u="root",$p="12345",$h="localhost",$d="Banner") {
     $this->u=$u;
     $this->p=$p;
     $this->h=$h;
@@ -22,7 +22,7 @@ class Setting{
     private function dbconn(){
     $u=$this->u;$p=$this->p;$h=$this->h;$d=$this->d;
     $mysqli = new mysqli($h,$u,$p,$d);
-    return $mysqli;
+    if($mysqli->connect_error){return false;}else{return $mysqli;}
     }
     //close the given connection
     private function dbclose($mysqli){
@@ -31,16 +31,26 @@ class Setting{
     //query automatically open and close db connection to save resource
     private function dbquery($query){
     $mydb=$this->dbconn();
+    if($mydb==false){return false;}else{
+    $myquery=$mydb->query($query);
     $this->dbclose($mydb);
-    return $queryresult;
+    return $myquery;
+    }
     }
     //return a setting using the impostation for the query
-    public function retriveASetting($table,$name,$where){
-    
+    public function retriveASetting($name,$table,$where){
+    $query="SELECT ".$name." FROM ".$table." WHERE ".$where[0].$where[1].'"'.$where[2].'"';
+    $result=$this->dbquery($query);
+    return $result->fetch_assoc();
     }
     //return an associative array of setting
     public function retriveAllSetting(){
     
+    }
+    public function updateASetting($set,$table,$where){
+    $query="UPDATE ".$table." SET ".$set[0].'="'.$set[1].'"'." WHERE ".$where[0].$where[1].'"'.$where[2].'"';
+    $result=$this->dbquery($query);
+    return $result;
     }
 }
 ?>
