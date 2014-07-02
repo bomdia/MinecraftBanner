@@ -30,7 +30,7 @@
             $serverdata['ping'] = false;
 
             $socket = $this->connect($host, $port);
-
+            
             if(!$socket) {
                 return false;
             }
@@ -133,16 +133,21 @@
 
         private function connect($host, $port) {
             $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-            socket_connect($socket, $host, $port); 
+            @socket_connect($socket, $host, $port) or $socket=$this->errcon($socket);
             return $socket;
         }
-
+        
+        private function errcon($socket){
+        $this->disconnect($socket);
+        $socket=false;
+        }
+        
         private function disconnect($socket) {
             if($socket != null) {
                 socket_close($socket);
             }
         }
-
+        
         private function read_packet_length($socket) {
             $a = 0;
             $b = 0;

@@ -17,11 +17,17 @@ class minecraft{
         return "Parse error second variable accept only s or n . s for space, n for &nbsp";
         }
     }
-    public function Status($server="pvp24.com"){
-    require_once("Status.class.php");
-    $status = new MinecraftServerStatus();
-    $response = $status->getStatus($server);
-    return $response;
+    public function Status($host = 'pvp24.com', $version = '1.7.*' , $port = 25565){
+        require_once("Status.class.php");
+        $status = new MinecraftServerStatus();
+        $response = $status->getStatus($host , $version , $port);
+        if(!$response) {
+        return $response;
+        }else{
+        $response["html-favicon"]='<img src="'.$response["favicon"].'">';
+        $response["html-motd"]=$this->ParseMessage($response["motd_raw"]);
+        return $response;
+        }
     }
     }
 ?>
