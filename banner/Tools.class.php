@@ -258,5 +258,14 @@ class Tool{
     }
     public function Sec($str){echo("[".$str."]\n");}
     public function Vrb($str1,$str2){echo("$str1=$str2\n");}
+    public function mrequire($array){
+        if(!is_array($array)){require_once($array);}else{
+        $lenght=count($array);
+        for($i=0;;$i++){
+        if($lenght==$i){break;}
+        require_once($array[$i]);
+        }
+        }
+    }
     }
 ?>

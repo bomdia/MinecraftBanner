@@ -15,7 +15,7 @@
         }
 
         public function getStatus($host = '127.0.0.1', $version = '1.7.*' , $port = 25565) {
-
+            $hosts=$host;
             if (substr_count($host , '.') != 4) $host = gethostbyname($host);
 
             $serverdata = array();
@@ -122,11 +122,11 @@
                     $serverdata['motd'] = $motd;
                     $serverdata['motd_raw'] = $motdraw;
                     $serverdata['ping'] = $ping;
-
+                    
             }
 
             $this->disconnect($socket);
-
+            $serverdata['hostname'] = $hosts;
             return $serverdata;
 
         }
