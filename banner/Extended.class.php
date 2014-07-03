@@ -47,7 +47,12 @@ class minecraft{
         $fb="segoeuib.ttf";
         if(!$response) {
             imagefill($img,0,0,$crosso);
-            imagettftext($img,15,0,20,40,$color,$fn,$host.":".$port);
+            $favicon="tmp/favicon/".$host."-".$port."-favicon.png";
+            if(file_exists($favicon)){
+                $imag=imagecreatefrompng($favicon);
+                imagecopyresampled($img,$imag,18,18,0,0,64,64,64,64);
+            }
+            imagettftext($img,15,0,100,35,$color,$fn,$host.":".$port);
         }else {
             imagefill($img,0,0,$cverde);
             $v=$response['version'];
@@ -62,7 +67,7 @@ class minecraft{
             imagettftext($img,$lchar,0,100,80,$color,$fn,$motd);
             imagettftext($img,15,0,270,58,$color,$fn,"Minecraft: ".$v);
             imagesavealpha($imag, TRUE);
-            imagepng($imag,"tmp/".$host."-".$port."-favicon.png");
+            imagepng($imag,"tmp/favicon/".$host."-".$port."-favicon.png");
         }
         $dir='tmp/'.$host.'-'.$port.'.png';
         imagepng($img, $dir);
