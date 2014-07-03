@@ -127,6 +127,7 @@
 
             $this->disconnect($socket);
             $serverdata['hostname'] = $hosts;
+            $serverdata['port']=$port;
             return $serverdata;
 
         }

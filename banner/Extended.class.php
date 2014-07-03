@@ -29,5 +29,44 @@ class minecraft{
         return $response;
         }
     }
+    public function MotdSe($motd){
+        for($i=0;;$i++){
+            if(15==$i){break;}
+            $motd=str_replace("  "," ",$motd);
+        }
+        $lmotd=strlen($motd);
+        if($lmotd<30){$lchar=15;}elseif($lmotd<60){$lchar=12;}else{$lchar=8;}
+        return array($motd,$lchar);
+    }
+    public function CreateImage($response,$host,$port){
+        $img = imagecreatetruecolor(680,100);
+        $color = imagecolorallocate($img,0,0,0);
+        $cverde = imagecolorallocate($img,0,255,0);
+        $crosso = imagecolorallocate($img,255,0,0);
+        $fn="segoeui.ttf";
+        $fb="segoeuib.ttf";
+        if(!$response) {
+            imagefill($img,0,0,$crosso);
+            imagettftext($img,15,0,20,40,$color,$fn,$host.":".$port);
+        }else {
+            imagefill($img,0,0,$cverde);
+            $v=$response['version'];
+            $pl=$response['players'];
+            $mpl=$response['maxplayers'];
+            $motd=$this->MotdSe($response['motd'])[0];
+            $lchar=$this->MotdSe($response['motd'])[1];
+            $imag=imagecreatefrompng($response["favicon"]);
+            imagecopyresampled($img,$imag,18,18,0,0,64,64,64,64);
+            imagettftext($img,15,0,100,35,$color,$fn,$host.":".$port);
+            imagettftext($img,15,0,100,58,$color,$fn,"Giocatori ".$pl."/".$mpl);
+            imagettftext($img,$lchar,0,100,80,$color,$fn,$motd);
+            imagettftext($img,15,0,270,58,$color,$fn,"Minecraft: ".$v);
+            imagesavealpha($imag, TRUE);
+            imagepng($imag,"tmp/".$host."-".$port."-favicon.png");
+        }
+        $dir='tmp/'.$host.'-'.$port.'.png';
+        imagepng($img, $dir);
+        return "<img src=\"$dir\">";
+    }
     }
 ?>
