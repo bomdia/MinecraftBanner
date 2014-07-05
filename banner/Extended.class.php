@@ -71,7 +71,19 @@ class minecraft{
         }
         $dir='tmp/'.$host.'-'.$port.'.png';
         imagepng($img, $dir);
-        return "<img src=\"$dir\">";
+        return $dir;
     }
+    public function Image($host,$port,$version="1.7.*"){
+        $dir="tmp/".$host."-".$port.".png";
+        $ctime=time();
+        $ftime=@filemtime($dir) or 0;
+        $difftime=$ctime-$ftime;
+        $time=floor($difftime/60);
+        if($time>=1){
+            $response=$this->Status($host,$version,$port);
+            $this->CreateImage($response,$host,$port);
+        }
+        return "http://".$_SERVER["HTTP_HOST"].dirname($_SERVER["PHP_SELF"])."/".$dir;
     }
+}
 ?>
