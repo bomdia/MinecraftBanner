@@ -13,9 +13,14 @@ class Tool{
         $diz=array_merge($dizp1,$dizp2,$dizp3);
         return $diz;
     }
-    public function Salter($diz=""){
+    public function Salter($diz="",$length=5){
         if($diz==""){$diz=$this->Dictionary();}
-        return $diz[rand(0,61)].$diz[rand(0,61)].$diz[rand(0,61)].$diz[rand(0,61)].$diz[rand(0,61)];
+		$tocken=null;
+		for($i=0;;$i++){
+			if($i==$length){break;}
+			$tocken=$tocken.$diz[rand(0,61)];
+		}
+		return $tocken;
     }
     public function sha1bom($world,$dizionario="",$doublesha=false,$salt=''){
         if($dizionario==""){$dizionario=$this->Dictionary();}
@@ -27,11 +32,11 @@ class Tool{
             return array('shaw' => sha1($shaw),'salt' => $salt,'type'=>'normalsha');
         }
     }
-    public function Exploder($str,$divider="&"){
-        $a = explode($divider, $str);$na=count($a);
+    public function Exploder($str,$divider1="&",$divider2="="){
+        $a = explode($divider1, $str);$na=count($a);
         for ($i=0; ;$i++) {
             if($i==$na){break;}
-            $b = explode('=', $a[$i]);
+            $b = explode($divider2, $a[$i]);
             $cd[$b[0]]=$b[1];
         }
         return $cd;
@@ -107,11 +112,6 @@ class Tool{
         imagepng($img);
         imagedestroy($img,$idst);
     }
-	/*public function ssid($biscuit){
-	$ssid=$this->Exploder($biscuit,'@&@&@');
-	if($ssid[0]==
-	}
-	*/
     public function xml2array($url, $get_attributes = 1, $priority = 'tag'){
         $contents = "";
         if (!function_exists('xml_parser_create'))
@@ -267,5 +267,26 @@ class Tool{
         }
         }
     }
-    }
+    private function StoreTocken($tocken,$file){
+		$handle=@fopen($file,"wb");
+		@fwrite($handle,$tocken);
+		@fclose($handle);
+	}
+	public function GetTocken($file){
+		if(file_exists($file)){
+			$difftime=time()-filemtime($file);
+			if($difftime<1800){
+				$tocken = file($file)[0];
+			}else{
+				$tocken = $this->Salter("",100);
+				$this->StoreTocken($tocken);
+			}
+		}else{
+			$tocken = $this->Salter("",100);
+			$this->StoreTocken($tocken);
+		}
+		return $tocken;
+	}
+
+	}
 ?>
